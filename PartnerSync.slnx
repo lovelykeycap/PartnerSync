@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PartnerSync.Contracts/PartnerSync.Contracts.csproj" />
+    <Project Path="src/PartnerSync/PartnerSync.csproj" />
+    <Project Path="src/DemoSystems/DemoSystems.csproj" />
+  </Folder>
+</Solution>
