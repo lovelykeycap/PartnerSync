@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option csharp_namespace = "PartnerSync.Contracts.Grpc";
+package partnersync.orders.v1;
+
+service InternalOrders {
+  rpc GetOrder (GetOrderRequest) returns (GetOrderReply);
+  rpc ApplyPartnerOrder (ApplyPartnerOrderRequest) returns (ApplyPartnerOrderReply);
+}
+
+message OrderSnapshot {
+  string partner_id = 1;
+  string order_id = 2;
+  string status = 3;
+  int64 total_minor = 4;
+  string currency = 5;
+  int64 source_version = 6;
+  int64 revision = 7;
+}
+
+message GetOrderRequest {
+  string partner_id = 1;
+  string order_id = 2;
+}
+
+message GetOrderReply {
+  bool found = 1;
+  OrderSnapshot order = 2;
+}
+
+message ApplyPartnerOrderRequest {
+  string event_id = 1;
+  OrderSnapshot order = 2;
+  int64 expected_revision = 3;
+}
+
+enum ApplyOutcome {
+  APPLY_OUTCOME_UNSPECIFIED = 0;
+  APPLY_OUTCOME_APPLIED = 1;
+  APPLY_OUTCOME_CONFLICT = 2;
+  APPLY_OUTCOME_STALE = 3;
+}
+
+message ApplyPartnerOrderReply {
+  ApplyOutcome outcome = 1;
+}
