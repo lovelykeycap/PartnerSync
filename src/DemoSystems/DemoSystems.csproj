@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup>
     <ProjectReference Include="../PartnerSync.Contracts/PartnerSync.Contracts.csproj" />
+    <PackageReference Include="Grpc.AspNetCore" />
+    <PackageReference Include="Npgsql" />
   </ItemGroup>
 </Project>
