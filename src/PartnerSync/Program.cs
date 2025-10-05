@@ -1,3 +1,4 @@
+using Confluent.Kafka;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using PartnerSync;
@@ -32,6 +33,18 @@ builder.Services.AddSingleton<PartnerClient>();
 builder.Services.AddSingleton<InternalOrdersClient>();
 builder.Services.AddSingleton<ReconciliationStore>();
 builder.Services.AddHostedService<PollingWorker>();
+
+builder.Services.AddOptions<KafkaSettings>().BindConfiguration("Kafka");
+builder.Services.AddSingleton<IProducer<string, string>>(sp =>
+    new ProducerBuilder<string, string>(new ProducerConfig
+    {
+        BootstrapServers = sp.GetRequiredService<IOptions<KafkaSettings>>().Value.BootstrapServers,
+        EnableIdempotence = true,
+        Acks = Acks.All,
+        MessageTimeoutMs = 10_000,
+        AllowAutoCreateTopics = false
+    }).Build());
+builder.Services.AddHostedService<OutboxWorker>();
 
 var app = builder.Build();
 app.MapGet("/health/live", () => Results.Ok(new { status = "alive" }));
